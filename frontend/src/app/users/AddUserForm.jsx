@@ -60,7 +60,7 @@ export default function AddUserForm({ onAdded, onCancel }) {
         <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <input className="input" placeholder="Nom" value={form.nom} onChange={(e) => handleChange("nom", e.target.value)} required />
           <input className="input" placeholder="Prénom" value={form.prenom} onChange={(e) => handleChange("prenom", e.target.value)} required />
-          <input className="input" placeholder="Téléphone" value={form.phone} onChange={(e) => handleChange("phone", e.target.value)} required />
+          <input className="input" placeholder="Téléphone" value={form.phone} onChange={(e) => handleChange("phone", e.target.value)}  />
           <select className="input" value={form.statut} onChange={(e) => handleChange("statut", e.target.value)}>
             <option value="payé">Payé</option>
             <option value="non payé">Non payé</option>

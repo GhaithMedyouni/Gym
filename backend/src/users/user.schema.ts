@@ -9,8 +9,8 @@ export class User extends Document {
   @Prop({ required: true })
   prenom: string;
 
-  @Prop({ required: true })
-  phone: string;
+  @Prop()
+  phone?: string;
 
   @Prop({ required: true })
   dateDebut: Date;
