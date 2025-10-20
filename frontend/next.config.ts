@@ -1,19 +1,31 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  output: 'standalone', // ✅ pour hébergement Vercel / Render
+  output: 'standalone', // ✅ pour compatibilité Vercel / Render
+
+  // ✅ Gestion des images (évite les erreurs "Sharp" sur Vercel)
   images: {
-    unoptimized: true, // ✅ évite erreur compression
+    unoptimized: true,
   },
-  eslint: {
-    ignoreDuringBuilds: true,
+
+  // ✅ Ignore les erreurs de lint / TS pendant le build Vercel
+  eslint: { ignoreDuringBuilds: true },
+  typescript: { ignoreBuildErrors: true },
+
+  // ✅ Ajout proxy API pour éviter CORS côté client (optionnel mais utile)
+  async rewrites() {
+    return [
+      {
+        source: '/api/:path*',
+        destination: 'https://gym-j0ig.onrender.com/:path*', // 🔗 ton backend Render
+      },
+    ];
   },
-  typescript: {
-    ignoreBuildErrors: true,
-  },
+
+  // ✅ Sécurise et évite les timeouts Edge
   experimental: {
     serverActions: {
-      allowedOrigins: ['*'], // évite TLS 500 edge sur certaines pages
+      allowedOrigins: ['https://gym-j0ig.onrender.com', 'https://gym-rust-phi.vercel.app'],
     },
   },
 };
