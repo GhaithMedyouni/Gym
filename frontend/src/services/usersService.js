@@ -1,17 +1,24 @@
 import axios from "axios";
 
+// ✅ Base URL dynamique : locale en dev, Render en prod
 const api = axios.create({
-  baseURL: "http://localhost:5000", // ✅ ton backend NestJS
+  baseURL:
+    process.env.NEXT_PUBLIC_API_URL ||
+    "http://localhost:5000", // fallback local si variable absente
   headers: {
     "Content-Type": "application/json",
   },
 });
 
-// 🧩 Fonction utilitaire pour formater les dates et nettoyer les données
+// 🧩 Fonction utilitaire pour formater les dates
 const normalizeUser = (user) => ({
   ...user,
-  dateDebut: user.dateDebut ? new Date(user.dateDebut).toISOString().split("T")[0] : "",
-  dateFin: user.dateFin ? new Date(user.dateFin).toISOString().split("T")[0] : "",
+  dateDebut: user.dateDebut
+    ? new Date(user.dateDebut).toISOString().split("T")[0]
+    : "",
+  dateFin: user.dateFin
+    ? new Date(user.dateFin).toISOString().split("T")[0]
+    : "",
 });
 
 export const getUsers = async () => {
@@ -21,7 +28,6 @@ export const getUsers = async () => {
       ? response.data.map(normalizeUser)
       : [];
 
-    // ✅ Vérifie si certains utilisateurs ont été mis à jour (statut expiré)
     const expiredUsers = users.filter((u) => u.statut === "non payé");
     if (expiredUsers.length > 0) {
       console.info(
@@ -85,4 +91,3 @@ export const getDashboardStats = async () => {
     throw error;
   }
 };
-

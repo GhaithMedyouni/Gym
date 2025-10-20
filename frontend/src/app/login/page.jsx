@@ -1,31 +1,42 @@
-'use client'
-import { useState } from 'react'
-import axios from 'axios'
-import Cookies from 'js-cookie'
-import { useRouter } from 'next/navigation'
-import { Dumbbell } from 'lucide-react'
+'use client';
+import { useState } from 'react';
+import axios from 'axios';
+import Cookies from 'js-cookie';
+import { useRouter } from 'next/navigation';
+import { Dumbbell } from 'lucide-react';
 
 export default function LoginPage() {
-  const router = useRouter()
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
-  const [error, setError] = useState('')
-  const [loading, setLoading] = useState(false)
+  const router = useRouter();
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  // ✅ Utilise la variable d’environnement (locale ou Vercel)
+  const API_BASE_URL =
+    process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
   const handleLogin = async (e) => {
-    e.preventDefault()
-    setError('')
-    setLoading(true)
+    e.preventDefault();
+    setError('');
+    setLoading(true);
+
     try {
-      const res = await axios.post('http://localhost:5000/auth/login', { username, password })
-      Cookies.set('token', res.data.access_token)
-      router.push('/dashboard')
+      // ✅ utilise ton backend Render en production
+      const res = await axios.post(`${API_BASE_URL}/auth/login`, {
+        username,
+        password,
+      });
+
+      Cookies.set('token', res.data.access_token);
+      router.push('/dashboard');
     } catch (err) {
-      setError('Identifiants invalides')
+      console.error('Erreur de connexion:', err);
+      setError('Identifiants invalides ou serveur injoignable');
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-400 via-orange-500 to-amber-600 flex items-center justify-center px-4">
@@ -43,7 +54,9 @@ export default function LoginPage() {
         {/* Form */}
         <form onSubmit={handleLogin} className="space-y-5">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Nom d’utilisateur</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Nom d’utilisateur
+            </label>
             <input
               type="text"
               value={username}
@@ -55,7 +68,9 @@ export default function LoginPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Mot de passe</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Mot de passe
+            </label>
             <input
               type="password"
               value={password}
@@ -67,7 +82,9 @@ export default function LoginPage() {
           </div>
 
           {error && (
-            <p className="text-red-500 text-center text-sm font-medium">{error}</p>
+            <p className="text-red-500 text-center text-sm font-medium">
+              {error}
+            </p>
           )}
 
           <button
@@ -77,7 +94,6 @@ export default function LoginPage() {
           >
             {loading ? 'Connexion...' : 'Se connecter'}
           </button>
-
         </form>
 
         {/* Footer */}
@@ -86,5 +102,5 @@ export default function LoginPage() {
         </p>
       </div>
     </div>
-  )
+  );
 }
