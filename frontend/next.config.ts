@@ -1,15 +1,20 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  output: 'standalone', // ✅ indispensable pour Vercel
+  output: 'standalone', // ✅ pour hébergement Vercel / Render
   images: {
-    unoptimized: true, // ✅ évite les erreurs de compression sur Vercel
+    unoptimized: true, // ✅ évite erreur compression
   },
   eslint: {
-    ignoreDuringBuilds: true, // ✅ empêche Vercel de bloquer sur un warning
+    ignoreDuringBuilds: true,
   },
   typescript: {
-    ignoreBuildErrors: true, // ✅ optionnel si tu veux un build plus souple
+    ignoreBuildErrors: true,
+  },
+  experimental: {
+    serverActions: {
+      allowedOrigins: ['*'], // évite TLS 500 edge sur certaines pages
+    },
   },
 };
 
