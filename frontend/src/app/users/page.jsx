@@ -16,7 +16,7 @@ export default function UsersPage() {
   const [editing, setEditing] = useState(null)
   const [loading, setLoading] = useState(false)
 
-  // Charger les users depuis le backend
+  // Charger les utilisateurs
   const fetchUsers = async () => {
     setLoading(true)
     try {
@@ -33,7 +33,7 @@ export default function UsersPage() {
     fetchUsers()
   }, [])
 
-  // 🔍 Filtrage global combiné
+  // 🔍 Filtrage combiné
   const filteredUsers = useMemo(() => {
     return users.filter((u) => {
       const q = search.toLowerCase().trim()
@@ -72,54 +72,53 @@ export default function UsersPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#eef2ff] via-[#f8fafc] to-[#eef2ff] p-6">
+    <div className="min-h-screen bg-[#0B0B0B] text-white p-6">
       <div className="max-w-7xl mx-auto">
         {/* ======= TITRE ======= */}
-        <h1 className="text-3xl font-extrabold tracking-tight text-slate-800 mb-6">
+        <h1 className="text-3xl font-extrabold text-orange-400 mb-8 tracking-wide drop-shadow-[0_0_15px_rgba(255,107,0,0.5)]">
           👥 Gestion des utilisateurs
         </h1>
 
         {/* ======= CONTROLS ======= */}
-        <div className="bg-white/80 backdrop-blur-md border border-gray-200 shadow-md rounded-2xl p-5 mb-8 flex flex-col gap-5">
-
+        <div className="bg-[#141414] border border-orange-500/20 rounded-2xl shadow-[0_0_25px_rgba(255,107,0,0.3)] p-6 mb-10">
           {/* === Ligne 1 : Recherche + Ajouter === */}
-          <div className="flex flex-col sm:flex-row justify-between items-center gap-3">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-6">
             {/* 🔍 Barre de recherche */}
-            <div className="flex items-center bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 w-full sm:w-[420px] shadow-sm hover:shadow-md transition">
-              <Search size={18} className="text-gray-500 mr-2" />
+            <div className="flex items-center bg-[#1a1a1a] border border-orange-500/30 rounded-xl px-3 py-2 w-full md:w-[420px]
+              shadow-[0_0_10px_rgba(255,107,0,0.2)] focus-within:shadow-[0_0_15px_rgba(255,107,0,0.4)] transition-all duration-300">
+              <Search size={18} className="text-orange-400 mr-2" />
               <input
                 type="text"
                 placeholder="Rechercher par nom, prénom ou téléphone..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="bg-transparent flex-1 outline-none text-gray-800 placeholder:text-gray-400"
+                className="bg-transparent flex-1 outline-none text-white placeholder:text-gray-400"
               />
             </div>
 
             {/* ➕ Bouton Ajouter */}
             <button
               onClick={() => {
-                setShowAdd(true);
-                setEditing(null);
+                setShowAdd(true)
+                setEditing(null)
               }}
               className="bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700
-             text-white font-semibold flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl shadow-lg 
-             transition-all hover:scale-105"
+              text-white font-semibold flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl shadow-[0_0_15px_rgba(255,107,0,0.4)]
+              transition-all duration-300 hover:scale-105"
             >
               <UserPlus size={18} /> Ajouter
             </button>
-
           </div>
 
           {/* === Ligne 2 : Filtres === */}
-          <div className="flex flex-col sm:flex-row justify-start items-center gap-6">
+          <div className="flex flex-col md:flex-row justify-start items-center gap-6">
             {/* 🎯 Filtre par statut */}
             <div className="flex items-center gap-2">
-              <label className="text-sm font-medium text-gray-700">Statut :</label>
+              <label className="text-sm font-semibold text-gray-300">Statut :</label>
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                className="border border-gray-200 rounded-xl px-3 py-2 text-sm text-gray-800 bg-gray-50 hover:bg-gray-100 focus:ring-2 focus:ring-blue-500 transition"
+                className="bg-[#1a1a1a] border border-orange-500/30 rounded-lg px-3 py-2 text-sm text-white focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all duration-200"
               >
                 <option value="tous">Tous</option>
                 <option value="payé">Payé</option>
@@ -128,23 +127,23 @@ export default function UsersPage() {
               </select>
             </div>
 
-            {/* 📅 Filtre par date */}
+            {/* 📅 Filtre par période */}
             <div className="flex items-center gap-3">
-              <span className="text-sm font-medium text-gray-700">Période :</span>
+              <span className="text-sm font-semibold text-gray-300">Période :</span>
               <div className="flex items-center gap-2">
-                <label className="text-sm text-gray-600">Du</label>
+                <label className="text-sm text-gray-400">Du</label>
                 <input
                   type="date"
                   value={startDate}
                   onChange={(e) => setStartDate(e.target.value)}
-                  className="border border-gray-200 rounded-lg px-2 py-1.5 text-sm text-gray-700 bg-gray-50 hover:border-blue-400 focus:ring-2 focus:ring-blue-400 outline-none"
+                  className="bg-[#1a1a1a] border border-orange-500/30 rounded-lg px-2 py-1.5 text-sm text-white focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all duration-200"
                 />
-                <label className="text-sm text-gray-600">au</label>
+                <label className="text-sm text-gray-400">au</label>
                 <input
                   type="date"
                   value={endDate}
                   onChange={(e) => setEndDate(e.target.value)}
-                  className="border border-gray-200 rounded-lg px-2 py-1.5 text-sm text-gray-700 bg-gray-50 hover:border-blue-400 focus:ring-2 focus:ring-blue-400 outline-none"
+                  className="bg-[#1a1a1a] border border-orange-500/30 rounded-lg px-2 py-1.5 text-sm text-white focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all duration-200"
                 />
               </div>
             </div>
@@ -170,7 +169,7 @@ export default function UsersPage() {
         {/* ======= TABLE ======= */}
         <div className="mt-4">
           {loading ? (
-            <div className="text-center text-gray-500 py-10">
+            <div className="text-center text-orange-400 py-10 animate-pulse">
               Chargement des utilisateurs...
             </div>
           ) : (
@@ -183,6 +182,5 @@ export default function UsersPage() {
         </div>
       </div>
     </div>
-
   )
 }

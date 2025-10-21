@@ -35,51 +35,112 @@ export default function UpdateUserForm({ user, onUpdated, onCancel }) {
   }
 
   return (
-    <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 animate-fadeIn">
-      <div className="relative bg-white rounded-2xl shadow-2xl p-8 w-[90%] max-w-2xl border border-gray-100 animate-scaleIn">
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 animate-fadeIn">
+      <div className="relative bg-[#0B0B0B] text-white rounded-2xl shadow-[0_0_25px_rgba(255,107,0,0.4)]
+        p-8 w-[90%] max-w-2xl border border-orange-500/30 animate-scaleIn">
+        
+        {/* === Bouton fermer === */}
         <button
           onClick={onCancel}
-          className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition"
+          className="absolute top-4 right-4 text-orange-400 hover:text-orange-300 transition"
         >
-          <X size={20} />
+          <X size={22} />
         </button>
 
-        <h2 className="text-2xl font-bold text-orange-700 mb-6">✏️ Modifier l'utilisateur</h2>
+        {/* === Titre === */}
+        <h2 className="text-2xl font-extrabold text-orange-400 mb-6 tracking-wide drop-shadow-[0_0_10px_rgba(255,107,0,0.6)]">
+          ✏️ Modifier l’utilisateur
+        </h2>
 
+        {/* === Formulaire === */}
         <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <input className="input" placeholder="Nom" value={form.nom} onChange={(e) => handleChange("nom", e.target.value)} />
-          <input className="input" placeholder="Prénom" value={form.prenom} onChange={(e) => handleChange("prenom", e.target.value)} />
-          <input className="input" placeholder="Téléphone" value={form.phone} onChange={(e) => handleChange("phone", e.target.value)} />
-          <select className="input" value={form.statut} onChange={(e) => handleChange("statut", e.target.value)}>
+          {/* Champs texte */}
+          {[
+            { name: "nom", label: "Nom" },
+            { name: "prenom", label: "Prénom" },
+            { name: "phone", label: "Téléphone" },
+          ].map((input) => (
+            <input
+              key={input.name}
+              placeholder={input.label}
+              value={form[input.name] || ""}
+              onChange={(e) => handleChange(input.name, e.target.value)}
+              className="bg-[#1a1a1a] border border-orange-500/30 rounded-lg px-4 py-2.5 text-white placeholder-gray-400
+                focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all duration-200"
+            />
+          ))}
+
+          {/* Statut */}
+          <select
+            className="bg-[#1a1a1a] border border-orange-500/30 rounded-lg px-4 py-2.5 text-white focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all duration-200"
+            value={form.statut || "en cours"}
+            onChange={(e) => handleChange("statut", e.target.value)}
+          >
             <option value="payé">Payé</option>
             <option value="non payé">Non payé</option>
             <option value="en cours">En cours</option>
           </select>
 
-          <label className="label">Date début
-            <input type="date" className="input mt-1" value={form.dateDebut?.split("T")[0]} onChange={(e) => handleChange("dateDebut", e.target.value)} />
-          </label>
-          <label className="label">Date fin
-            <input type="date" className="input mt-1" value={form.dateFin?.split("T")[0]} onChange={(e) => handleChange("dateFin", e.target.value)} />
+          {/* Dates */}
+          <label className="flex flex-col text-sm text-gray-300">
+            Date début
+            <input
+              type="date"
+              className="bg-[#1a1a1a] mt-1 border border-orange-500/30 rounded-lg px-4 py-2.5 text-white focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all duration-200"
+              value={form.dateDebut?.split("T")[0] || ""}
+              onChange={(e) => handleChange("dateDebut", e.target.value)}
+            />
           </label>
 
+          <label className="flex flex-col text-sm text-gray-300">
+            Date fin
+            <input
+              type="date"
+              className="bg-[#1a1a1a] mt-1 border border-orange-500/30 rounded-lg px-4 py-2.5 text-white focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all duration-200"
+              value={form.dateFin?.split("T")[0] || ""}
+              onChange={(e) => handleChange("dateFin", e.target.value)}
+            />
+          </label>
+
+          {/* Upload photo */}
           <div className="md:col-span-2">
-            <label className="label">Photo</label>
+            <label className="text-sm text-gray-300 mb-2 block">Photo</label>
             <div className="flex items-center gap-4">
-              <label className="cursor-pointer inline-flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg border">
+              <label
+                className="cursor-pointer inline-flex items-center gap-2 bg-orange-500/10 hover:bg-orange-500/20
+                text-orange-400 px-4 py-2 rounded-lg border border-orange-500/30 transition-all duration-200"
+              >
                 <ImageIcon size={18} /> Changer
                 <input type="file" accept="image/*" onChange={handlePhoto} className="hidden" />
               </label>
-              {preview && <img src={preview} alt="preview" className="h-16 w-16 rounded-lg object-cover border" />}
+
+              {preview && (
+                <img
+                  src={preview}
+                  alt="preview"
+                  className="h-16 w-16 rounded-lg object-cover border border-orange-500/40 shadow-[0_0_10px_rgba(255,107,0,0.4)]"
+                />
+              )}
             </div>
           </div>
 
-          <div className="md:col-span-2 flex justify-end gap-3 mt-4">
-            <button type="button" onClick={onCancel} className="btn-secondary">Annuler</button>
-            <button type="submit"  disabled={loading}   className={`bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700
-              text-white font-semibold px-6 py-2.5 rounded-xl shadow-md transition-all
-              ${loading ? 'opacity-70 cursor-not-allowed' : 'hover:scale-105'}`}
->
+          {/* Boutons */}
+          <div className="md:col-span-2 flex justify-end gap-3 mt-6">
+            <button
+              type="button"
+              onClick={onCancel}
+              className="px-6 py-2.5 rounded-lg border border-orange-500/40 text-orange-400 hover:bg-orange-500/10 transition-all duration-200"
+            >
+              Annuler
+            </button>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className={`bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700
+                text-white font-semibold px-6 py-2.5 rounded-lg shadow-[0_0_15px_rgba(255,107,0,0.4)]
+                transition-all duration-300 ${loading ? 'opacity-60 cursor-not-allowed' : 'hover:scale-105'}`}
+            >
               {loading ? "Mise à jour..." : "Mettre à jour"}
             </button>
           </div>

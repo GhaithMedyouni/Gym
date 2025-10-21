@@ -7,7 +7,6 @@ import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend
 } from "recharts"
 
-
 export default function DashboardPage() {
   const [stats, setStats] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -27,7 +26,11 @@ export default function DashboardPage() {
   }, [])
 
   if (loading) {
-    return <div className="p-10 text-center text-gray-500">Chargement du tableau de bord...</div>
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-[#0B0B0B] text-orange-400 text-lg animate-pulse">
+        Chargement du tableau de bord...
+      </div>
+    )
   }
 
   const chartData = stats.labels.map((label, index) => ({
@@ -36,72 +39,98 @@ export default function DashboardPage() {
   }))
 
   return (
-    
-    <div className="p-6">
-      <h1 className="text-3xl font-extrabold text-slate-800 mb-6">📊 Tableau de bord</h1>
+    <div className="min-h-screen bg-[#0B0B0B] text-white p-4 sm:p-6 md:p-8 transition-all duration-300">
+      <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-orange-400 mb-8 drop-shadow-[0_0_10px_rgba(255,107,0,0.6)] text-center sm:text-left">
+        📊 Tableau de bord
+      </h1>
 
-      {/* === 4 Cartes principales === */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-        <Card className="border border-gray-100 shadow-md hover:shadow-lg transition bg-gradient-to-br from-slate-50 to-white">
-          <CardContent className="p-6 flex items-center justify-between">
-            <div>
-              <h3 className="text-gray-600 text-sm">Tous les membres</h3>
-              <p className="text-3xl font-bold text-slate-700">{stats.total}</p>
-            </div>
-            <Users size={42} className="text-slate-500" />
-          </CardContent>
-        </Card>
-
-        <Card className="border border-green-100 shadow-md hover:shadow-lg transition bg-gradient-to-br from-green-50 to-white">
-          <CardContent className="p-6 flex items-center justify-between">
-            <div>
-              <h3 className="text-gray-600 text-sm">Membres payés</h3>
-              <p className="text-3xl font-bold text-green-600">{stats.payes}</p>
-            </div>
-            <CheckCircle size={42} className="text-green-500" />
-          </CardContent>
-        </Card>
-
-        <Card className="border border-yellow-100 shadow-md hover:shadow-lg transition bg-gradient-to-br from-yellow-50 to-white">
-          <CardContent className="p-6 flex items-center justify-between">
-            <div>
-              <h3 className="text-gray-600 text-sm">Membres en cours</h3>
-              <p className="text-3xl font-bold text-yellow-600">{stats.enCours}</p>
-            </div>
-            <Clock size={42} className="text-yellow-500" />
-          </CardContent>
-        </Card>
-
-        <Card className="border border-red-100 shadow-md hover:shadow-lg transition bg-gradient-to-br from-red-50 to-white">
-          <CardContent className="p-6 flex items-center justify-between">
-            <div>
-              <h3 className="text-gray-600 text-sm">Membres non payés</h3>
-              <p className="text-3xl font-bold text-red-600">{stats.nonPayes}</p>
-            </div>
-            <XCircle size={42} className="text-red-500" />
-          </CardContent>
-        </Card>
+      {/* === Cartes principales === */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5 sm:gap-6 mb-10">
+        {[
+          {
+            title: "Tous les membres",
+            value: stats.total,
+            color: "text-orange-400",
+            bg: "from-[#1A1A1A] to-[#2C1B00]",
+            border: "border-orange-500/30",
+            shadow: "shadow-[0_0_20px_rgba(255,107,0,0.3)]",
+            Icon: Users,
+          },
+          {
+            title: "Membres payés",
+            value: stats.payes,
+            color: "text-green-400",
+            bg: "from-[#102914] to-[#0B0B0B]",
+            border: "border-green-500/30",
+            shadow: "shadow-[0_0_20px_rgba(0,255,100,0.3)]",
+            Icon: CheckCircle,
+          },
+          {
+            title: "Membres en cours",
+            value: stats.enCours,
+            color: "text-amber-400",
+            bg: "from-[#2A1F00] to-[#0B0B0B]",
+            border: "border-amber-500/30",
+            shadow: "shadow-[0_0_20px_rgba(255,191,0,0.3)]",
+            Icon: Clock,
+          },
+          {
+            title: "Membres non payés",
+            value: stats.nonPayes,
+            color: "text-red-400",
+            bg: "from-[#290808] to-[#0B0B0B]",
+            border: "border-red-500/30",
+            shadow: "shadow-[0_0_20px_rgba(255,0,0,0.3)]",
+            Icon: XCircle,
+          },
+        ].map((item, index) => (
+          <Card
+            key={index}
+            className={`bg-gradient-to-br ${item.bg} border ${item.border} ${item.shadow}
+            hover:shadow-[0_0_25px_rgba(255,107,0,0.5)] transition-all duration-300`}
+          >
+            <CardContent className="p-6 flex items-center justify-between">
+              <div>
+                <h3 className="text-gray-400 text-sm sm:text-base">{item.title}</h3>
+                <p className={`text-2xl sm:text-3xl font-bold ${item.color}`}>{item.value}</p>
+              </div>
+              <item.Icon size={36} className={item.color} />
+            </CardContent>
+          </Card>
+        ))}
       </div>
 
-      {/* === Graphique Inscriptions par Mois === */}
-      <Card className="border border-blue-100 shadow-md">
-        <CardContent className="p-6">
-          <h3 className="text-lg font-semibold text-slate-700 mb-4">📈 Nouvelles inscriptions par mois</h3>
-          <div className="w-full h-80">
+      {/* === Graphique Inscriptions === */}
+      <Card className="bg-[#121212] border border-orange-500/30 shadow-[0_0_20px_rgba(255,107,0,0.3)] hover:shadow-[0_0_25px_rgba(255,107,0,0.5)] transition-all duration-300">
+        <CardContent className="p-4 sm:p-6">
+          <h3 className="text-lg sm:text-xl font-semibold text-orange-400 mb-4 text-center sm:text-left">
+            📈 Nouvelles inscriptions par mois
+          </h3>
+          <div className="w-full h-64 sm:h-80 md:h-[400px]">
             <ResponsiveContainer>
-              <LineChart data={chartData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" stroke="#555" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
+              <LineChart
+                data={chartData}
+                margin={{ top: 10, right: 20, left: -10, bottom: 0 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" stroke="#333" />
+                <XAxis dataKey="name" stroke="#aaa" tick={{ fontSize: 12 }} />
+                <YAxis stroke="#aaa" tick={{ fontSize: 12 }} />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: '#1A1A1A',
+                    border: '1px solid #FF6B00',
+                    color: '#fff',
+                    borderRadius: '8px',
+                  }}
+                />
+                <Legend wrapperStyle={{ fontSize: '12px', color: '#fff' }} />
                 <Line
                   type="monotone"
                   dataKey="Inscriptions"
-                  stroke="#2563eb"
+                  stroke="#FF6B00"
                   strokeWidth={3}
-                  dot={{ r: 4 }}
-                  activeDot={{ r: 6 }}
+                  dot={{ r: 3.5, fill: '#FF6B00' }}
+                  activeDot={{ r: 7, fill: '#FFA94D' }}
                 />
               </LineChart>
             </ResponsiveContainer>
@@ -109,6 +138,5 @@ export default function DashboardPage() {
         </CardContent>
       </Card>
     </div>
-    
   )
 }
