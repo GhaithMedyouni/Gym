@@ -12,7 +12,7 @@ export default function LoginPage() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  // ✅ Utilise la variable d’environnement (locale ou Vercel)
+  // ✅ URL dynamique : backend Render en prod, localhost en dev
   const API_BASE_URL =
     process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
@@ -22,17 +22,28 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      // ✅ utilise ton backend Render en production
+      // ✅ Envoi la requête vers ton backend Render
       const res = await axios.post(`${API_BASE_URL}/auth/login`, {
         username,
         password,
       });
 
-      Cookies.set('token', res.data.access_token);
+      // ✅ Stocke le token dans les cookies
+      Cookies.set('token', res.data.access_token, { expires: 1 }); // expire dans 1 jour
       router.push('/dashboard');
     } catch (err) {
-      console.error('Erreur de connexion:', err);
-      setError('Identifiants invalides ou serveur injoignable');
+      console.error('❌ Erreur de connexion:', err);
+
+      // Gestion des messages d’erreur
+      if (err.response) {
+        if (err.response.status === 401) {
+          setError('Nom d’utilisateur ou mot de passe incorrect.');
+        } else {
+          setError(`Erreur serveur (${err.response.status})`);
+        }
+      } else {
+        setError('Serveur injoignable. Réessaye plus tard.');
+      }
     } finally {
       setLoading(false);
     }
@@ -41,7 +52,7 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-400 via-orange-500 to-amber-600 flex items-center justify-center px-4">
       <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl p-8 w-full max-w-md animate-fadeIn">
-        {/* Logo */}
+        {/* 🏋️ Logo */}
         <div className="flex items-center justify-center mb-6">
           <Dumbbell size={32} className="text-orange-500 mr-2" />
           <h1 className="text-3xl font-extrabold text-gray-800">Gym Admin</h1>
@@ -51,7 +62,7 @@ export default function LoginPage() {
           Connectez-vous à votre espace d’administration
         </p>
 
-        {/* Form */}
+        {/* 🔐 Formulaire de connexion */}
         <form onSubmit={handleLogin} className="space-y-5">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -61,8 +72,8 @@ export default function LoginPage() {
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2563eb] focus:outline-none transition"
-              placeholder="Your Username Please"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:outline-none transition"
+              placeholder="Entrez votre nom d’utilisateur"
               required
             />
           </div>
@@ -75,8 +86,8 @@ export default function LoginPage() {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2563eb] focus:outline-none transition"
-              placeholder="Your Password Please"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:outline-none transition"
+              placeholder="Entrez votre mot de passe"
               required
             />
           </div>
@@ -90,13 +101,17 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 rounded-lg shadow-lg transition-all duration-200"
+            className={`w-full ${
+              loading
+                ? 'bg-orange-400 cursor-not-allowed'
+                : 'bg-orange-500 hover:bg-orange-600'
+            } text-white font-semibold py-2 rounded-lg shadow-lg transition-all duration-200`}
           >
             {loading ? 'Connexion...' : 'Se connecter'}
           </button>
         </form>
 
-        {/* Footer */}
+        {/* 📅 Footer */}
         <p className="text-gray-400 text-center text-sm mt-6">
           © {new Date().getFullYear()} Gym Admin. Tous droits réservés.
         </p>
