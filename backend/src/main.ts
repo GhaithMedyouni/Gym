@@ -17,7 +17,7 @@ async function bootstrap() {
     origin: [
       'http://localhost:3000',
       'http://192.168.100.9:3000',
-      'gym-chi-gold.vercel.app', // 🔹 on le mettra après déploiement
+      'https://gym-chi-gold.vercel.app', // 🔹 on le mettra après déploiement
     ],
     credentials: true,
   });
