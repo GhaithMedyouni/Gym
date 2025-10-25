@@ -17,7 +17,7 @@ async function bootstrap() {
     origin: [
       'http://localhost:3000',
       'http://192.168.100.9:3000',
-      'https://gym-frontend-54t8.onrender.com', // 🔹 on le mettra après déploiement
+      'gym-chi-gold.vercel.app', // 🔹 on le mettra après déploiement
     ],
     credentials: true,
   });
