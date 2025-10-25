@@ -9,11 +9,6 @@ export class UsersService {
 
   // ➕ CREATE
   async create(data: Partial<User>): Promise<User> {
-    // Vérifie si le numéro de téléphone existe déjà
-    const existing = await this.userModel.findOne({ phone: data.phone });
-    if (existing) {
-      throw new BadRequestException('Un utilisateur avec ce numéro existe déjà.');
-    }
 
     const newUser = new this.userModel(data);
     return newUser.save();
