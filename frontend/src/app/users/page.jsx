@@ -66,10 +66,16 @@ export default function UsersPage() {
 
   const handleDelete = async (id) => {
     if (confirm("Supprimer cet utilisateur ?")) {
-      await deleteUser(id)
-      await fetchUsers()
+      try {
+        await deleteUser(id)
+        setUsers(users.filter(u => u._id !== id))
+        alert("Utilisateur supprimé ✔")
+      } catch (err) {
+        alert("Erreur lors de la suppression ❌")
+      }
     }
   }
+
 
   return (
     <div className="min-h-screen bg-[#0B0B0B] text-white p-6">

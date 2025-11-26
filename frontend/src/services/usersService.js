@@ -5,7 +5,7 @@ const api = axios.create({
   baseURL:
     process.env.NEXT_PUBLIC_API_URL ||
     "http://localhost:5000", // fallback pour le dev local
-  timeout: 15000, // ⏱️ 15s pour éviter les erreurs 504
+  timeout: 0, // ⏱️ 15s pour éviter les erreurs 504
   headers: {
     "Content-Type": "application/json",
   },
