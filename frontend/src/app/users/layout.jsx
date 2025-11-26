@@ -1,25 +1,20 @@
 'use client'
-import { useState } from 'react'
 import { Sidebar } from '../../components/Sidebar'
 import { Navbar } from '../../components/Navbar'
 
 export default function DashboardLayout({ children }) {
-  const [collapsed, setCollapsed] = useState(false)
-
   return (
-    <div className="flex min-h-screen bg-[#0B0B0B] text-white transition-all duration-300">
-      {/* Sidebar */}
-      <Sidebar collapsed={collapsed} setCollapsed={setCollapsed} />
+    <div className="min-h-screen bg-[#0B0B0B]">
+      {/* Sidebar - fixed position, responsive width */}
+      <Sidebar />
 
-      {/* Contenu principal */}
-      <div
-        className={`flex-1 flex flex-col transition-all duration-300 ${
-          collapsed ? 'ml-20' : 'ml-64'
-        }`}
-      >
-        <Navbar />
-        <main className="flex-1 p-6">{children}</main>
-      </div>
+      {/* Navbar - fixed at top, adjusts for sidebar */}
+      <Navbar />
+
+      {/* Main Content - adjusts for both navbar (pt-16) and sidebar */}
+      <main className="min-h-screen pt-16">
+        {children}
+      </main>
     </div>
   )
 }
